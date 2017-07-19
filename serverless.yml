@@ -1,0 +1,40 @@
+service: serverless-chrome-examples
+
+provider:
+  name: aws
+  runtime: nodejs6.10
+  stage: dev
+  region: us-east-1
+  environment:
+    DEBUG: "*" # you'll see logs in CloudWatch, or $ serverless logs -f functionName
+
+plugins:
+  - serverless-plugin-typescript
+  - serverless-plugin-chrome
+
+custom:
+  chromeFlags:
+    - --window-size=1280x1696 # Letter size
+    - --hide-scrollbars
+
+package:
+  exclude:
+    - ./**
+  include:
+    - ./src/**
+    - node_modules/chrome-remote-interface/**
+    - node_modules/commander/**
+    - node_modules/ws/**
+    - node_modules/ultron/**
+    - ./.serverless/**
+
+functions:
+  request-logger:
+    description: Headless Chrome Serverless-framework request logging example
+    memorySize: 1024
+    timeout: 30
+    handler: src/requestLogger.handler
+    events:
+      - http:
+          path: request-logger
+          method: get
