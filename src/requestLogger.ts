@@ -7,15 +7,15 @@ export async function handler (event, context, callback) {
   const requestsMade = [];
 
   const browser = await Cdp({ tab: 'ws://127.0.0.1:9222/devtools/browser' });
-	console.log("Browser connected...");
+  console.log("Browser connected...");
 
-	const newTarget = await browser.Target.createTarget({url: 'about:blank'});
-	const targetId = newTarget.targetId;
+  const newTarget = await browser.Target.createTarget({url: 'about:blank'});
+  const targetId = newTarget.targetId;
   const targetList = await Cdp.List();
-	const url = targetList.find(target => target.id === targetId).webSocketDebuggerUrl;
-	const client = await Cdp({tab: url});
+  const url = targetList.find(target => target.id === targetId).webSocketDebuggerUrl;
+  const client = await Cdp({tab: url});
 
-	const { Emulation, Network, Page } = client;
+  const { Emulation, Network, Page } = client;
   Network.requestWillBeSent(params => requestsMade.push(params));
 
   const loadEventFired = Page.loadEventFired();
@@ -38,7 +38,7 @@ export async function handler (event, context, callback) {
     );
 
     loadEventFired.then(async () => {
-			console.log("Load event fired...");
+      console.log("Load event fired...");
       clearTimeout(timeout);
       resolve();
     });
@@ -46,9 +46,9 @@ export async function handler (event, context, callback) {
   // It's important that we close the websocket connection,
   // or our Lambda function will not exit properly
 
-	await client.close();
-	await browser.Target.closeTarget({targetId});
-	await browser.close();
+  await client.close();
+  await browser.Target.closeTarget({targetId});
+  await browser.close();
 
   callback(null, {
     statusCode: 200,
