@@ -9,19 +9,15 @@ provider:
     DEBUG: "*" # you'll see logs in CloudWatch, or $ serverless logs -f functionName
 
 plugins:
+  #- serverless-plugin-tracing
   - serverless-plugin-typescript
-  - serverless-plugin-chrome
-
-custom:
-  chromeFlags:
-    - --window-size=1280x1696 # Letter size
-    - --hide-scrollbars
 
 package:
   exclude:
     - ./**
   include:
     - ./src/**
+    - node_modules/@serverless-chrome/**
     - node_modules/chrome-remote-interface/**
     - node_modules/commander/**
     - node_modules/ws/**
